@@ -2,7 +2,7 @@
 본 프로그램은 클라이언트가 여러 채팅 서버에 접속하여 채팅을 할 수 있는 프로그램이다.
 
 # UML 다이어그햄
-![UML](https://raw.githubusercontent.com/dev-jwel/JAVA-term-project/master/images/UML.png)
+![UML](https://github.com/dev-jwel/JAVA-term-project/raw/master/images/JAVA.png)
 
 # 통신 프로토콜 설계
 
