@@ -40,6 +40,14 @@ public class SenderSubThread extends Thread {
 	 * 락을 사용하여 입력받은 데이터를 outputStream에 적는다.
 	 */
 	protected void write(byte[] b) {
-		// TODO
+		lock.lock();
+		try{
+			outputStream.write(b);
+		}catch(Exception e){
+			e.printStackTrace();
+			throw e;
+		}finally{
+			lock.unlock();
+		}
 	}
 }
