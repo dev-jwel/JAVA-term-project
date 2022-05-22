@@ -29,6 +29,6 @@ public class MessageSender extends SenderSubThread {
 	 * ingoingBuffer에 받은 메시지를 추가한다.
 	 */
 	public void sendMessage(String message) {
-		// TODO
+		ingoingBuffer.offer(message);
 	}
 }
