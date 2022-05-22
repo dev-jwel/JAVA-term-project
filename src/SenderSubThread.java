@@ -44,7 +44,8 @@ public class SenderSubThread extends Thread {
 		try{
 			outputStream.write(b);
 		}catch(Exception e){
-			System.out.println("write 실패");
+			e.printStackTrace();
+			throw e;
 		}finally{
 			lock.unlock();
 		}
