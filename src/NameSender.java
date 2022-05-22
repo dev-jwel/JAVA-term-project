@@ -9,7 +9,7 @@ public class NameSender extends SenderSubThread {
 	/**
 	 * ChatSession으로부터 온 닉네임을 저장한다.
 	 */
-	private ConcurrentLinkedQueue<String> ingoingBuffer;
+	private ConcurrentLinkedQueue<String> ingoingBuffer = new ConcurrentLinkedQueue<String>();
 
 	public NameSender(ReentrantLock lock, OutputStream outputStream) {
 		super(lock, outputStream);
@@ -22,7 +22,13 @@ public class NameSender extends SenderSubThread {
 	 * killFlag를 체크하는 것을 잊지 말자.
 	 */
 	public void run() {
-		// TODO
+		while(!killFlag){
+			if(!ingoingBuffer.isEmpty()){
+				byte[] StringData = {0x01, (byte)((CharSequence) ingoingBuffer).length()};
+				write(StringData);
+				write(ingoingBuffer.poll().getBytes());
+			}
+		}
 	}
 
 	/**
