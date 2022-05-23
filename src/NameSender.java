@@ -24,8 +24,8 @@ public class NameSender extends SenderSubThread {
 	public void run() {
 		while(!killFlag){
 			if(!ingoingBuffer.isEmpty()){
-				byte[] stringData = {0x01, (byte)((CharSequence) ingoingBuffer).length()};
-				write(stringData);
+				byte[] StringData = {0x00, (byte)ingoingBuffer.poll().length()};
+				write(StringData);
 				write(ingoingBuffer.poll().getBytes());
 			}
 		}
