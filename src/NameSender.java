@@ -35,6 +35,6 @@ public class NameSender extends SenderSubThread {
 	 * ingoingBuffer에 받은 이름을 추가한다.
 	 */
 	public void appendName(String message) {
-		// TODO
+		ingoingBuffer.offer(message);
 	}
 }
