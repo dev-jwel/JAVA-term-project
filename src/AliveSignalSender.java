@@ -23,6 +23,13 @@ public class AliveSignalSender extends SenderSubThread {
 	 * killFlag를 체크하는 것을 잊지 말자.
 	 */
 	public void run() {
-		// TODO
+		while(isServer) {
+			byte[] Data = {0x00, };
+			try {
+				write(Data);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
