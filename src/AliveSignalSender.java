@@ -25,10 +25,13 @@ public class AliveSignalSender extends SenderSubThread {
 	public void run() {
 		while(!killFlag) {
 			byte[] Data = {0x02, };
-			try {
-				write(Data);
-			} catch (Exception e) {
-				throw e;
+			if(isServer) {
+				try {
+					write(Data);
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw e;
+				}
 			}
 		}
 	}
