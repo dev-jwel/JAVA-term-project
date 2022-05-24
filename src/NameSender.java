@@ -22,7 +22,13 @@ public class NameSender extends SenderSubThread {
 	 * killFlag를 체크하는 것을 잊지 말자.
 	 */
 	public void run() {
-		// TODO
+		while(!killFlag){
+			if(!ingoingBuffer.isEmpty()){
+				String ingoingBufferData = ingoingBuffer.poll();
+				byte[] StringData = {0x00, (byte)ingoingBufferData.length(), ingoingBufferData.getBytes()};
+				write(StringData);
+			}
+		}
 	}
 
 	/**
