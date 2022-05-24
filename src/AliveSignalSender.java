@@ -24,14 +24,11 @@ public class AliveSignalSender extends SenderSubThread {
 	 */
 	public void run() {
 		while(!killFlag) {
-			byte[] Data = {0x02, };
+			byte[] Data = new byte[1];
 			if(isServer) {
-				try {
-					write(Data);
-				} catch (Exception e) {
-					e.printStackTrace();
-					throw e;
-				}
+				Data[0] = 0x82;
+			} else {
+				Data[0] = 0x02;
 			}
 		}
 	}
