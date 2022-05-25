@@ -1,29 +1,27 @@
 import java.util.ArrayList;
 import java.net.Socket;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.concurrent.locks.ReentrantLock;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * 이 클래스는 클리이언트의 요청을 처리하는 역할을 맡는다.
  */
-public class ChatHander extends SenderSubThread {
+public class ChatHander {
 	/**
 	 * 클리이언트의 닉네임이다.
 	 */
 	private String clientName = "";
 
 	/**
-	 * 클라이언트로부터 오는 InputStream이다.
+	 * Message를 대신 받아주는 스레드이다.
 	 */
-	private InputStream inputStream;
+	private ChatReceiver receiver;
 
 	/**
-	 * inputStream으로부터 값을 저장하고 있는 임시버퍼이다.
-	 * 이 멤버번수는 이 스레드에서만 사용되므로 스레드안정성의 고려대상이 아니다.
+	 * 클라이언트로부터 서버로 데이터가 전송되는 스트림이다.
 	 */
-	private ArrayList<Byte> rawBuffer = new ArrayList<Byte>();
+	private ObjectOutputStream outputStream;
 
 	/**
 	 * ChatHander로부터 HandlerPoolManager로 가는 버퍼이다.
@@ -36,31 +34,28 @@ public class ChatHander extends SenderSubThread {
 	private ConcurrentLinkedQueue<Message> outgoingBuffer = new ConcurrentLinkedQueue<Message>();
 
 	/**
-	 * alive 시그널을 보내주는 객체이다.
-	 * timeout이 걸리면 kill()을 호출하자.
+	 * 이 멤버변수는 가장 최근에 데이터를 전송한 시간을 기록한다.
+	 * 클라이언트의 timeout을 막기 위해 사용된다.
 	 */
-	private AliveSignalSender aliveSignalSender;
+	private int recentlySentTime;
 
 	/**
-	 * 이 멤버변수는 가장 최근에 받은 Alive 시그널의 수신 시간을 기록한다.
+	 * 이 멤버변수는 가장 최근에 받은 데이터의 수신 시간을 기록한다.
 	 * timeout을 확인하기 위해 사용한다.
 	 */
-	private int recentlyRecievedAliveSignalTime;
+	private int recentlyReceivedTime;
 
-	public ChatHander(InputStream inputStream, OutputStream outputStream) {
-		super(outputStream);
-		this.inputStream = inputStream;
-		this.aliveSignalSender = new AliveSignalSender(this.lock, outputStream, true);
+	public ChatHander(Socket client) throws IOException {
+		this.outputStream = new ObjectOutputStream(client.getOutputStream());
+		this.receiver = new ChatReceiver(client.getInputStream());
+		this.receiver.start();
 	}
 
 	/**
-	 * 이 메소드는 무한루프를 돌며 inputStream으로부터 클라이언트가 보낸 데이터를 읽는다.
-	 * 우선 rawBuffer에 기록하며, rawBuffer의 내용이 프로토콜 명세에 부합하게 완전히 도착하면
-	 * 데이터를 처리한다.
-	 * alive 시그널은 recentlyRecievedAliveSignalTime을 업데이트하고,
-	 * 클리이언트의 메시지는 outgoingBuffer에 추가한다.
-	 * ingoingBuffer 역시 체크하며, 만약 값이 있다면 super 클래스의 write()를 이용하여 처리한다.
-	 * timeout을 체크하는 것을 잊지 말자.
+	 * 이 메소드는 무한루프를 돌며 아래 작업들을 한다.
+	 * 1. timeout을 체크하고 문제가 있으면 receiver를 죽이고 이 스레드도 죽는다.
+	 * 2. recentlySentTime이 너무 오래되었으면 ALIVE Message를 보낸다.
+	 * 3. ingoingBuffer에 Message가 있으면 클라이언트에 보낸다.
 	 */
 	public void run() {
 		// TODO
@@ -83,4 +78,13 @@ public class ChatHander extends SenderSubThread {
 	public void sendMessage(Message message) {
 		// TODO
 	}
+
+	/**
+	 * 이 메소드는 ChatReceiver에서 호출된다.
+	 * outgoingBuffer에 메시지를 하나 채운다.
+	 */
+	public void addMessage(Message message) {
+		// TODO
+	}
+
 }
