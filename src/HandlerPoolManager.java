@@ -28,6 +28,7 @@ public class HandlerPoolManager extends Thread {
 	 * 받아온 소켓으로 ChatHander 스레드를 새로이 생성하고 pool에 넣어 관리한다.
 	 */
 	public void addClient(Socket client) {
-		// TODO
+		ChatHander ChatHanderT = new ChatHander(client);
+		handlerPool.add(ChatHanderT);
 	}
 }
