@@ -1,11 +1,11 @@
 import java.net.Socket;
-import java.lang.Runnable;
+import java.lang.Thread;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 클라이언트 핸들러들을 관리하는 pool이다.
  */
-public class HandlerPoolManager implements Runnable {
+public class HandlerPoolManager extends Thread {
 	/**
 	 * 클라이언트 핸들러들을 담고있는 풀이다.
 	 * 이 스레드와 ChatServer 스레드가 동시에 접근하므로
