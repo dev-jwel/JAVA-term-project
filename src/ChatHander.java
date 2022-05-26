@@ -56,6 +56,7 @@ public class ChatHander {
 	 * 1. timeout을 체크하고 문제가 있으면 receiver를 죽이고 이 스레드도 죽는다.
 	 * 2. recentlySentTime이 너무 오래되었으면 ALIVE Message를 보낸다.
 	 * 3. ingoingBuffer에 Message가 있으면 클라이언트에 보낸다.
+	 * 4. receiver가 받은 Message가 있으면 outgoingBuffer에 넣는다.
 	 */
 	public void run() {
 		// TODO
@@ -77,14 +78,6 @@ public class ChatHander {
 	 */
 	public void sendMessage(Message message) {
 		ingoingBuffer.offer(message);
-	}
-
-	/**
-	 * 이 메소드는 ChatReceiver에서 호출된다.
-	 * outgoingBuffer에 메시지를 하나 채운다.
-	 */
-	public void addMessage(Message message) {
-		outgoingBuffer.offer(message);
 	}
 
 }
