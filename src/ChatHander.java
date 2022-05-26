@@ -76,7 +76,7 @@ public class ChatHander {
 	 * ingoingBuffer에 메시지를 하나 채운다.
 	 */
 	public void sendMessage(Message message) {
-		// TODO
+		ingoingBuffer.offer(message);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ChatHander {
 	 * outgoingBuffer에 메시지를 하나 채운다.
 	 */
 	public void addMessage(Message message) {
-		// TODO
+		outgoingBuffer.offer(message);
 	}
 
 }
