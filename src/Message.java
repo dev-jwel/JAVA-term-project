@@ -18,4 +18,9 @@ public class Message implements Serializable {
 	* 클라이언트의 메세지이다.
 	*/
 	public String message;
+
+	/**
+	 * 클라이언트가 보낸 이미지이다.
+	 */
+	public SerializableImage image;
 }

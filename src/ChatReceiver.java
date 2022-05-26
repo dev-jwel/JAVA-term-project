@@ -28,7 +28,7 @@ public class ChatReceiver extends Thread {
 	}
 
 	/**
-	 * 이 메소드는 무한루프를 돌며 inputStream에서 받은 Message를 handler로 보낸다.
+	 * 이 메소드는 무한루프를 돌며 inputStream에서 받은 Message를 messageBuffer에 저장한다.
 	 * killFlag 또한 확인한다.
 	 */
 	public void run() {

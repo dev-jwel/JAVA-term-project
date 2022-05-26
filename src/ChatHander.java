@@ -1,3 +1,4 @@
+import java.lang.Thread;
 import java.util.ArrayList;
 import java.net.Socket;
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * 이 클래스는 클리이언트의 요청을 처리하는 역할을 맡는다.
  */
-public class ChatHander {
+public class ChatHander extends Thread {
 	/**
 	 * 클리이언트의 닉네임이다.
 	 */
