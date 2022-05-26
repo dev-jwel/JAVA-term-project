@@ -48,13 +48,13 @@ public class ChatClient extends JFrame {
 	 * 보낸 메시지는 messageList에 반영하지 않으며,
 	 * 서버에서 다시 돌려줄 때 까지 기다린다.
 	 */
-	private JButton sendTextButton = new JButton();
+	private JButton textSendButton = new JButton();
 
 	/**
 	 * 이미지 메시지를 보내는 기능을 갖는 버튼이다.
 	 * 텍스트 전송 버튼과 유사하다.
 	 */
-	private JButton sendImageButton = new JButton();
+	private JButton imageSendButton = new JButton();
 
 	/**
 	 * args의 첫번째 값은 서버의 주소이고 두번째 값은 포트 번호이다.
@@ -78,13 +78,5 @@ public class ChatClient extends JFrame {
 	 */
 	public void appendMessage(Message message) {
 		// TODO
-	}
-
-	public void lock() {
-		this.lock.lock();
-	}
-
-	public void unlock() {
-		this.lock.unlock();
 	}
 }
