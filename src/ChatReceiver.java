@@ -32,7 +32,10 @@ public class ChatReceiver extends Thread {
 	 * killFlag 또한 확인한다.
 	 */
 	public void run() {
-		// TODO
+		while(!killFlag){
+			Message message = new InputStreamReader(inputStream);
+			messageBuffer.add(message);
+		}
 	}
 
 	public void kill() {
