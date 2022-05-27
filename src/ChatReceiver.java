@@ -31,8 +31,19 @@ public class ChatReceiver extends Thread {
 	 * 이 메소드는 무한루프를 돌며 inputStream에서 받은 Message를 messageBuffer에 저장한다.
 	 * killFlag 또한 확인한다.
 	 */
-	public void run() {
-		// TODO
+	public void run(){
+		Object object;
+		Message message;
+		while(!killFlag){
+			try {
+				object = inputStream.readObject();
+				message = (Message)object;
+				messageBuffer.add(message);
+			} catch (Exception e) {
+				e.printStackTrace();
+				break;
+			}
+		}
 	}
 
 	public void kill() {
