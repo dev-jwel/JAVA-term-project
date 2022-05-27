@@ -51,7 +51,7 @@ public class BackgroundClient extends Thread {
 	 * 1. timeout을 체크하고 문제가 있으면 receiver를 죽이고 이 스레드도 죽는다.
 	 * 2. recentlySentTime이 너무 오래되었으면 ALIVE Message를 보낸다.
 	 * 3. messageBuffer에 Message가 있으면 클라이언트에 보낸다.
-	 * 4. receiver로부터 Message를 하나 얻어오고 null이 아니면 ChatClient의 GUI를 lock과 함께 조작한다.
+	 * 4. receiver로부터 Message를 하나 얻어오고 null이 아니면 ChatClient의 GUI를 조작한다.
 	 */
 	public void run() {
 		// TODO

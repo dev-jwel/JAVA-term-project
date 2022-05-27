@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.net.Socket;
 import java.lang.Thread;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -27,8 +28,9 @@ public class HandlerPoolManager extends Thread {
 	 * ChatServer에서 호출하는 메소드이다.
 	 * 받아온 소켓으로 ChatHander 스레드를 새로이 생성하고 pool에 넣어 관리한다.
 	 */
-	public void addClient(Socket client) {
-		ChatHander ChatHanderT = new ChatHander(client);
-		handlerPool.add(ChatHanderT);
+	public void addClient(Socket client) throws IOException {
+		ChatHander chatHandler = new ChatHander(client);
+		chatHandler.start();
+		handlerPool.add(chatHandler);
 	}
 }
