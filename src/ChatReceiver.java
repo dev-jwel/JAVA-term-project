@@ -33,10 +33,9 @@ public class ChatReceiver extends Thread {
 	 */
 	public void run() {
 		while(!killFlag){
-			ChatReceiver chatReceiver = new ChatReceiver();
-			Message message = chatReceiver.getMessage();
-			ChatHander hander = new ChatHander();
-			hander.addMessage(message);			
+			ChatReceiver chatreceiver = new ChatReceiver(inputStream);
+			Message message = (Message)inputStream.readObject();
+			messageBuffer.add(message);
 		}
 	}
 
