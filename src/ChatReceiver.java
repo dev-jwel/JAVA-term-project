@@ -33,8 +33,14 @@ public class ChatReceiver extends Thread {
 	 */
 	public void run() {
 		while(true){
+<<<<<<< Updated upstream
 			Message message = (Message)inputStream.readObject();
 			this.messageBuffer.add(message);
+=======
+			Object object = inputStream.readObject();
+			Message message = (Message)object;
+			messageBuffer.add(message);
+>>>>>>> Stashed changes
 			if(!killFlag){
 				break;
 			}
