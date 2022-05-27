@@ -41,6 +41,7 @@ public class ChatReceiver extends Thread {
 				messageBuffer.add(message);
 			} catch (Exception e) {
 				e.printStackTrace();
+				break;
 			}
 		}
 	}
