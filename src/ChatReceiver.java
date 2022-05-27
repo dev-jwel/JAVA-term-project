@@ -33,10 +33,13 @@ public class ChatReceiver extends Thread {
 	 */
 	public void run(){
 		while(!killFlag){
-			try{
-				Message message = (Message)inputStream.readObject();
+			Object object;
+			Message message;
+			try {
+				object = inputStream.readObject();
+				message = (Message)object;
 				messageBuffer.add(message);
-			}catch(IOException e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;
 			}
