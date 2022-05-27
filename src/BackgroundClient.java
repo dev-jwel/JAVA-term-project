@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * 이 클래스는 서버와의 통신을 처리하는 스레드이다.
+ * ChatReceiver 서브스레드를 주기적으로 확인하다가 받은 메시지가 있다면 GUI에 반영한다.
  */
 public class BackgroundClient extends Thread {
 	/**
@@ -19,7 +20,7 @@ public class BackgroundClient extends Thread {
 	private ChatReceiver receiver;
 
 	/**
-	 * 서버부터 클라이언트로 데이터가 전송되는 스트림이다.
+	 * 클라이언트가 서버로 메시지를 보내기 위해 사용되는 스트림이다.
 	 */
 	private ObjectOutputStream outputStream;
 
@@ -51,9 +52,17 @@ public class BackgroundClient extends Thread {
 	 * 1. timeout을 체크하고 문제가 있으면 receiver를 죽이고 이 스레드도 죽는다.
 	 * 2. recentlySentTime이 너무 오래되었으면 ALIVE Message를 보낸다.
 	 * 3. messageBuffer에 Message가 있으면 클라이언트에 보낸다.
-	 * 4. receiver로부터 Message를 하나 얻어오고 null이 아니면 ChatClient의 GUI를 조작한다.
+	 * 4. receiver로부터 Message를 하나 얻어오고 null이 아니면 ChatClient에 appendMessage()를 통해 보낸다.
 	 */
 	public void run() {
+		// TODO
+	}
+
+	/**
+	 * 이 메소드는 ChatClient의 리스너에서 호출된다.
+	 * ingoingBuffer에 메시지를 하나 채운다.
+	 */
+	public void sendMessage(Message message) {
 		// TODO
 	}
 }

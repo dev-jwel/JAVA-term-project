@@ -5,7 +5,9 @@
  */
 public class ChatServer {
 	public static void main(String[] args) {
-		HandlerPoolManager poolManager;
+		HandlerPoolManager poolManager = new HandlerPoolManager();
+		poolManager.start();
+		
 		// TODO
 	}
 

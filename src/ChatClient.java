@@ -5,6 +5,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 이 클래스는 클라이언트의 채팅 세션을 보여주는 GUI이다.
+ * 채팅 내용은 스크롤이 가능해야 하는 동시에 텍스트와 이미지를 모두 보여주어야 한다.
+ * 따라서 이들을 GridBagLayout의 JPanel에 넣고 이 Panel을 JScrollPane에 넣음으로써 해결한다.
+ * 버튼들에 등록되어야 하는 리스너들은 이 클래스의 필드에서 내용을 읽어 backgroundClient를 통하여
+ * 메시지를 보내야 한다.
  */
 public class ChatClient extends JFrame {
 	/**
@@ -52,7 +56,7 @@ public class ChatClient extends JFrame {
 
 	/**
 	 * 이미지 메시지를 보내는 기능을 갖는 버튼이다.
-	 * 텍스트 전송 버튼과 유사하다.
+	 * swing의 파일 선택 기능을 이용하여 이미지 파일을 얻은 후, 이의 내용을 서버로 보내야 한다.
 	 */
 	private JButton imageSendButton = new JButton();
 

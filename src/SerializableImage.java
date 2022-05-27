@@ -6,6 +6,7 @@ import java.awt.image.WritableRaster;
 
 /**
  * 직렬화가 가능한 Image 클래스이다.
+ * 이와 같은 직렬화 가능한 객체를 스트림으로 주고받을때 Exception을 잘 확인하자.
  */
 public class SerializableImage extends BufferedImage implements Serializable {
 	public SerializableImage(Image image) {

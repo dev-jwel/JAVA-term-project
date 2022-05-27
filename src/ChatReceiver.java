@@ -5,11 +5,11 @@ import java.io.ObjectInputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * 이 클래스는 클리이언트의 요청을 받는 역할을 맡는다.
+ * 이 클래스는 상대 호스트의 요청을 받는 역할을 맡는다.
  */
 public class ChatReceiver extends Thread {
 	/**
-	 * 클라이언트로부터 서버로 데이터가 전송되는 스트림이다.
+	 * 상대 호스트로부터 데이터가 전송되는 스트림이다.
 	 */
 	private ObjectInputStream inputStream;
 

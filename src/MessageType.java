@@ -29,7 +29,6 @@ public enum MessageType {
 	/**
 	 * 서버가 보내온 메세지이다.
 	 * 이 타입으로 Message를 보냃 때, Message의 type과 name은 null이 아니고, 그 이외의 멤버들 중에서 하나만 null이 아니다.
-	 * 현재는 text만 고려한다.
 	 */
 	SENDMESSAGE,
 }
