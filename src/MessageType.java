@@ -15,15 +15,20 @@ public enum MessageType {
 	CHANGENAME,
 
 	/**
-	 * 클라이언트가 요청한 텍스트 전송이다..
+	 * 클라이언트가 요청한 텍스트 전송이다.
 	 * 이 타입으로 Message를 보낼 때, Message의 type과 text을 제외한 모든 멤버는 null이다.
 	 */
 	SENDTEXT,
 
 	/**
+	 * 클라이언트가 요청한 이미지 전송이다.
+	 * 이 타입으로 Message를 보낼 때, Message의 type과 image를 제외한 모든 멤버는 null이다.
+	 */
+	SENDIMAGE,
+
+	/**
 	 * 서버가 보내온 메세지이다.
 	 * 이 타입으로 Message를 보냃 때, Message의 type과 name은 null이 아니고, 그 이외의 멤버들 중에서 하나만 null이 아니다.
-	 * 현재는 text만 고려한다.
 	 */
 	SENDMESSAGE,
 }

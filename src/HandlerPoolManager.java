@@ -1,9 +1,11 @@
+import java.io.IOException;
 import java.net.Socket;
 import java.lang.Thread;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 클라이언트 핸들러들을 관리하는 pool이다.
+ * 어떤 클라이언트가 보내온 Message가 있다면 모든 클라이언트에 그 Message를 전달한다.
  */
 public class HandlerPoolManager extends Thread {
 	/**
@@ -14,7 +16,7 @@ public class HandlerPoolManager extends Thread {
 	private CopyOnWriteArrayList<ChatHander> handlerPool = new CopyOnWriteArrayList<ChatHander>();
 
 	/**
-	 * 무한루프를 돌며 pool에서 outgoingBuffer의 메시지를
+	 * 무한루프를 돌며 pool의 핸들러에서 outgoingBuffer의 메시지를
 	 * 모든 pool의 ChatHander에게 보내준다.
 	 * 메시지를 받아온 ChatHander에게도 보낸다.
 	 * isAlive()로 상태를 체크하고 pool에서 제거하는 책임도 가진다.
@@ -27,7 +29,9 @@ public class HandlerPoolManager extends Thread {
 	 * ChatServer에서 호출하는 메소드이다.
 	 * 받아온 소켓으로 ChatHander 스레드를 새로이 생성하고 pool에 넣어 관리한다.
 	 */
-	public void addClient(Socket client) {
-		// TODO
+	public void addClient(Socket client) throws IOException {
+		ChatHander chatHandler = new ChatHander(client);
+		chatHandler.start();
+		handlerPool.add(chatHandler);
 	}
 }

@@ -1,3 +1,4 @@
+import java.lang.Thread;
 import java.util.ArrayList;
 import java.net.Socket;
 import java.io.IOException;
@@ -6,8 +7,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * 이 클래스는 클리이언트의 요청을 처리하는 역할을 맡는다.
+ * outgoingBuffer는 이 핸들러가 receiver로부터 가져온 메시지들이 들어간다.
+ * ingoingBuffer는 다른 핸들러가 받은 메시지가 HandlerPoolManager에 의해 들어온다.
  */
-public class ChatHander {
+public class ChatHander extends Thread {
 	/**
 	 * 클리이언트의 닉네임이다.
 	 */
@@ -24,12 +27,12 @@ public class ChatHander {
 	private ObjectOutputStream outputStream;
 
 	/**
-	 * ChatHander로부터 HandlerPoolManager로 가는 버퍼이다.
+	 * HandlerPoolManager로부터 ChatHander로 가는 버퍼이다.
 	 */
 	private ConcurrentLinkedQueue<Message> ingoingBuffer = new ConcurrentLinkedQueue<Message>();
 
 	/**
-	 * HandlerPoolManager로부터 ChatHander로 가는 버퍼이다.
+	 * ChatHander로부터 HandlerPoolManager로 가는 버퍼이다.
 	 */
 	private ConcurrentLinkedQueue<Message> outgoingBuffer = new ConcurrentLinkedQueue<Message>();
 
@@ -56,6 +59,7 @@ public class ChatHander {
 	 * 1. timeout을 체크하고 문제가 있으면 receiver를 죽이고 이 스레드도 죽는다.
 	 * 2. recentlySentTime이 너무 오래되었으면 ALIVE Message를 보낸다.
 	 * 3. ingoingBuffer에 Message가 있으면 클라이언트에 보낸다.
+	 * 4. receiver가 받은 Message가 있으면 outgoingBuffer에 넣는다.
 	 */
 	public void run() {
 		// TODO

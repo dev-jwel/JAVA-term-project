@@ -5,6 +5,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 이 클래스는 클라이언트의 채팅 세션을 보여주는 GUI이다.
+ * 채팅 내용은 스크롤이 가능해야 하는 동시에 텍스트와 이미지를 모두 보여주어야 한다.
+ * 따라서 이들을 GridBagLayout의 JPanel에 넣고 이 Panel을 JScrollPane에 넣음으로써 해결한다.
+ * 버튼들에 등록되어야 하는 리스너들은 이 클래스의 필드에서 내용을 읽어 backgroundClient를 통하여
+ * 메시지를 보내야 한다.
  */
 public class ChatClient extends JFrame {
 	/**
@@ -18,17 +22,14 @@ public class ChatClient extends JFrame {
 	private BackgroundClient backgroundClient;
 
 	/**
-	 * 사용자들의 채팅들을 담는 리스트이다.
-	 * ChatSession이 호출한 appendMessage()를 통하여 관리된다.
-	 * 이 멤버변수는 스레드 안전을 고려할 필요가 없다.
-	 * appendMessage()에서만 사용되기 때문이다.
+	 * 다음 메시지를 담을 GridBagLayout의 인덱스를 가리킨다.
 	 */
-	private ArrayList<String> textList = new ArrayList<String>();
+	private int layoutIndex = 0;
 
 	/**
-	 * 채팅 내용을 보여주는 text area이다.
+	 * 채팅 내용을 보여주는 영역이다.
 	 */
-	private JTextArea textArea = new JTextArea();
+	private JPanel chatPanel;
 
 	/**
 	 * 사용자가 이름을 입력할 수 있는 필드이다.
@@ -46,12 +47,18 @@ public class ChatClient extends JFrame {
 	private JButton nameChangeButton = new JButton();
 
 	/**
-	 * 메시지를 전송하는 버튼이다.
+	 * 텍스트 메시지를 전송하는 버튼이다.
 	 * 핸들러는 메시지를 outgoingBuffer에 추가한다.
 	 * 보낸 메시지는 messageList에 반영하지 않으며,
 	 * 서버에서 다시 돌려줄 때 까지 기다린다.
 	 */
-	private JButton sendButton = new JButton();
+	private JButton textSendButton = new JButton();
+
+	/**
+	 * 이미지 메시지를 보내는 기능을 갖는 버튼이다.
+	 * swing의 파일 선택 기능을 이용하여 이미지 파일을 얻은 후, 이의 내용을 서버로 보내야 한다.
+	 */
+	private JButton imageSendButton = new JButton();
 
 	/**
 	 * args의 첫번째 값은 서버의 주소이고 두번째 값은 포트 번호이다.
@@ -63,16 +70,17 @@ public class ChatClient extends JFrame {
 
 	/**
 	 * 이곳에서 GUI생성, BackgroundClient 스레드 생성, 리스너 등록 등 모든 초기화를 처리한다.
+	 * panel은 GridBagLayout이며, JScrollPane에 들어있어야 한다.
+	 * panel에서 텍스트와 이미지의 gridheight는 각각 1, 5이다.
 	 */
 	public ChatClient(Socket server) {
 		// TODO
 	}
 
-	public void lock() {
-		this.lock.lock();
-	}
-
-	public void unlock() {
-		this.lock.unlock();
+	/**
+	 * BackgroundClient에서 호출되며, 메시지를 화면에 누적시켜 보이게 한다.
+	 */
+	public void appendMessage(Message message) {
+		// TODO
 	}
 }
