@@ -75,16 +75,16 @@ public class ChatHander {
 	 * 이 메소드는 HandlerPoolManager에서 호출된다.
 	 * ingoingBuffer에 메시지를 하나 채운다.
 	 */
-	public void sendMessage(Message message) {
-		// TODO
+	public Message getMessage() {
+		return outgoingBuffer.peek();
 	}
 
 	/**
 	 * 이 메소드는 ChatReceiver에서 호출된다.
 	 * outgoingBuffer에 메시지를 하나 채운다.
 	 */
-	public void addMessage(Message message) {
-		// TODO
+	public void sendMessage(Message message) {
+		ingoingBuffer.offer(message);
 	}
 
 }
