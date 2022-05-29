@@ -55,8 +55,37 @@ public class BackgroundClient extends Thread {
 	 * 4. receiver로부터 Message를 하나 얻어오고 null이 아니면 ChatClient에 appendMessage()를 통해 보낸다.
 	 */
 	public void run() {
-		// TODO
-	}
+		
+		while(true){
+			Message Message1 = messageBuffer.poll(); 
+			Message Message2 = receiver.getMessage();
+			
+			if(recentlyReceivedTime > recentlySentTime){
+				Object object = (Object)MessageType.ALIVE;
+				try {
+					outputStream.writeObject(object);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				receiver.interrupt();
+				break;
+			}
+			
+			if(Message1 != null){
+				Object object = (Object)Message1;
+				try {
+					outputStream.writeObject(object);
+					recentlySentTime = 0; 
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(Message2 != null){
+				messageBuffer.offer(Message2);
+				recentlyReceivedTime = 0;
+			}
+		}
 
 	/**
 	 * 이 메소드는 ChatClient의 리스너에서 호출된다.
