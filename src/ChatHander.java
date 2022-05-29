@@ -61,8 +61,56 @@ public class ChatHander extends Thread {
 	 * 3. ingoingBuffer에 Message가 있으면 클라이언트에 보낸다.
 	 * 4. receiver가 받은 Message가 있으면 outgoingBuffer에 넣는다.
 	 */
-	public void run() {
-		// TODO
+	public void run() { 
+		int sendTimeout = 50; //전송 시 timeout을 위한 변수
+		int receiveTimeout = 100; // 수신 시 timeout을 위한 변수
+		int currentTime = 0; //현재시간 측정을 위한 변수
+		
+		while(true){
+			Message ingoingBufferMessage = ingoingBuffer.poll(); //ingoingBuffer에서 Message를 꺼내 ingoingBufferMessage에 저장
+			Message receiverMessage = receiver.getMessage(); //receiver에서 받은 Message를 receiverMessage에 저장
+			
+			//1
+			if(receiverMessage == null){ //수신 받은 Message가 없을때(즉, 상대가 응답이 없을 때)
+				if(recentlySentTime+sendTimeout == currentTime){
+					receiver.interrupt();
+					break;
+				}
+				if(recentlyReceivedTime+receiveTimeout == currentTime){
+					receiver.interrupt();
+					break;
+				}
+			}
+	
+			//2		
+			if(recentlySentTime+30 == currentTime){ //recentlySentTime 30time이 지났으면(recentlySentTime 오래되었으면) 실행
+				Object object = (Object)MessageType.ALIVE;
+				try {
+					outputStream.writeObject(object);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			//3
+			if(ingoingBufferMessage != null){ 
+				Object object = (Object)ingoingBufferMessage;
+				try {
+					recentlySentTime = currentTime;
+					outputStream.writeObject(object);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			//4
+			if(receiverMessage != null){ 
+				recentlyReceivedTime = currentTime;
+				outgoingBuffer.offer(receiverMessage);
+			}
+			
+			currentTime += 1;
+		}
 	}
 
 	/**
