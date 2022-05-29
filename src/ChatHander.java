@@ -62,7 +62,42 @@ public class ChatHander extends Thread {
 	 * 4. receiver가 받은 Message가 있으면 outgoingBuffer에 넣는다.
 	 */
 	public void run() {
-		// TODO
+		int timeout = 50;
+		recentlyReceivedTime = 0;
+		recentlySentTime = 0; 
+		
+		while(true){
+			Message Message1 = ingoingBuffer.poll(); 
+			Message Message2 = receiver.getMessage();
+			recentlyReceivedTime += 1;
+			recentlySentTime += 1;
+			
+			if(recentlyReceivedTime == timeout){
+				receiver.interrupt();
+				break;
+			}
+			if(recentlySentTime == timeout){
+				Object object = (Object)MessageType.ALIVE;
+				try {
+					outputStream.writeObject(object);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(Message1 != null){
+				Object object = (Object)Message1;
+				try {
+					outputStream.writeObject(object);
+					recentlySentTime = 0; 
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(Message2 != null){
+				outgoingBuffer.offer(Message2);
+				recentlyReceivedTime = 0;
+			}
+		}
 	}
 
 	/**
