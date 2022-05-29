@@ -69,15 +69,6 @@ public class ChatHander extends Thread {
 	 * 이 메소드는 HandlerPoolManager에서 호출된다.
 	 * outgoingBuffer로부터 메시지를 하나 꺼내온다.
 	 * 값이 없으면 null을 리턴한다.
-	 ㅓ*/
-	public Message getMessage() {
-		// TODO
-		return null;
-	}
-
-	/**
-	 * 이 메소드는 HandlerPoolManager에서 호출된다.
-	 * ingoingBuffer에 메시지를 하나 채운다.
 	 */
 	public Message getMessage() {
 		Message OutgoingBuffer = outgoingBuffer.poll();
