@@ -80,7 +80,8 @@ public class ChatHander extends Thread {
 	 * ingoingBuffer에 메시지를 하나 채운다.
 	 */
 	public Message getMessage() {
-		return outgoingBuffer.poll();
+		Message OutgoingBuffer = outgoingBuffer.poll();
+		return OutgoingBuffer;
 	}
 
 	/**
