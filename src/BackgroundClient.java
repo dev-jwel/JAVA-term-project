@@ -86,6 +86,7 @@ public class BackgroundClient extends Thread {
 				recentlyReceivedTime = 0;
 			}
 		}
+	}
 
 	/**
 	 * 이 메소드는 ChatClient의 리스너에서 호출된다.
