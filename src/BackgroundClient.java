@@ -87,7 +87,8 @@ public class BackgroundClient extends Thread {
 				}
 			}
 			if(Message2 != null){
-				ChatClient.appendMessage(Message2);
+				ChatClient chatClient = new ChatClient(null);
+				chatClient.appendMessage(Message2);
 				recentlyReceivedTime = 0;
 			}
 		}
