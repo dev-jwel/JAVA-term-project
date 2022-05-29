@@ -55,22 +55,28 @@ public class BackgroundClient extends Thread {
 	 * 4. receiver로부터 Message를 하나 얻어오고 null이 아니면 ChatClient에 appendMessage()를 통해 보낸다.
 	 */
 	public void run() {
+		int timeout = 50;
+		recentlyReceivedTime = 0;
+		recentlySentTime = 0; 
+		
 		while(true){
 			Message Message1 = messageBuffer.poll(); 
 			Message Message2 = receiver.getMessage();
+			recentlyReceivedTime += 1;
+			recentlySentTime += 1;
 			
-			if(recentlyReceivedTime > recentlySentTime){
+			if(recentlyReceivedTime == timeout){
+				receiver.interrupt();
+				break;
+			}
+			if(recentlySentTime == timeout){
 				Object object = (Object)MessageType.ALIVE;
 				try {
 					outputStream.writeObject(object);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else {
-				receiver.interrupt();
-				break;
 			}
-			
 			if(Message1 != null){
 				Object object = (Object)Message1;
 				try {
@@ -81,7 +87,7 @@ public class BackgroundClient extends Thread {
 				}
 			}
 			if(Message2 != null){
-				messageBuffer.offer(Message2);
+				ChatClient.appendMessage(Message2);
 				recentlyReceivedTime = 0;
 			}
 		}
