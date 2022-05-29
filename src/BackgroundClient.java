@@ -55,21 +55,20 @@ public class BackgroundClient extends Thread {
 	 * 4. receiver로부터 Message를 하나 얻어오고 null이 아니면 ChatClient에 appendMessage()를 통해 보낸다.
 	 */
 	public void run() {
-		int timeout = 50;
-		recentlyReceivedTime = 0;
-		recentlySentTime = 0; 
+		int recentTime = 0;
 		
 		while(true){
-			Message Message1 = messageBuffer.poll(); 
-			Message Message2 = receiver.getMessage();
-			recentlyReceivedTime += 1;
-			recentlySentTime += 1;
+			Message MessageBufferMessage = messageBuffer.poll(); 
+			Message ReceiverMessage = receiver.getMessage();
+			recentTime += 1;
 			
-			if(recentlyReceivedTime == timeout){
+			if(recentlyReceivedTime <= recentlySentTime){
 				receiver.interrupt();
 				break;
-			}
-			if(recentlySentTime == timeout){
+			} else if(recentlyReceivedTime - recentlySentTime == recentTime){
+				receiver.interrupt();
+				break;
+			} else {
 				Object object = (Object)MessageType.ALIVE;
 				try {
 					outputStream.writeObject(object);
@@ -77,23 +76,22 @@ public class BackgroundClient extends Thread {
 					e.printStackTrace();
 				}
 			}
-			if(Message1 != null){
-				Object object = (Object)Message1;
+			if(MessageBufferMessage != null){
+				Object object = (Object)MessageBufferMessage;
 				try {
 					outputStream.writeObject(object);
 					recentlySentTime = 0; 
 				} catch (IOException e) {
 					e.printStackTrace();
-				}
+					}
 			}
-			if(Message2 != null){
-				ChatClient chatClient = new ChatClient(null);
-				chatClient.appendMessage(Message2);
+			if(ReceiverMessage != null){
+				chatClient.appendMessage(ReceiverMessage);
 				recentlyReceivedTime = 0;
 			}
 		}
 	}
-
+	
 	/**
 	 * 이 메소드는 ChatClient의 리스너에서 호출된다.
 	 * ingoingBuffer에 메시지를 하나 채운다.
