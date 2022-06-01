@@ -69,7 +69,6 @@ public class ChatHander extends Thread {
 		MessageObject.type = MessageType.ALIVE;
 		int sendTimeout = 50; //전송 시 timeout을 위한 변수. 50second동안 기다린다.
 		int receiveTimeout = 100; //수신 시 timeout을 위한 변수. 100second동안 기다린다.
-		int longTimeAgoRecentlySentTime = 100; //recentlySentTime이 오래되었는 지 확인하기 위한 변수.
 				
 		while(true){
 			Message ingoingBufferMessage = ingoingBuffer.poll(); //ingoingBuffer에서 Message를 꺼내 ingoingBufferMessage에 저장
@@ -79,25 +78,20 @@ public class ChatHander extends Thread {
 			Duration betweenReceivedCurrentSecond = Duration.between(recentlyReceivedTime, currentTime);//recentlyReceivedTime과 currentTime사이의 초 차이
 			
 			//1
-			if(receiverMessage == null){ //수신 받은 Message가 없을때(즉, 상대가 응답이 없을 때) 실행
-				if(betweenSentCurrentSecond.getSeconds() >= sendTimeout){
-					receiver.interrupt();
-					break;
-				}
-				if(betweenReceivedCurrentSecond.getSeconds() >= receiveTimeout){
-					receiver.interrupt();
-					break;
-				}
+			if(betweenReceivedCurrentSecond.getSeconds() >= receiveTimeout){
+				receiver.interrupt();
+				break;
 			}
-	
-			//2		
-			if(betweenSentCurrentSecond.getSeconds() >= longTimeAgoRecentlySentTime){
+			
+			//2
+			if(betweenSentCurrentSecond.getSeconds() >= sendTimeout){
 				recentlySentTime = LocalDateTime.now();
 				Object object = (Object)MessageObject.type;
 				try {
 					outputStream.writeObject(object);
 				} catch (IOException e) {
 					e.printStackTrace();
+					break;
 				}
 			}
 			
