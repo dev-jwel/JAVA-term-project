@@ -64,7 +64,7 @@ public class ChatHander extends Thread {
 	 * 3. ingoingBuffer에 Message가 있으면 클라이언트에 보낸다.
 	 * 4. receiver가 받은 Message가 있으면 outgoingBuffer에 넣는다.
 	 */
-public void run() { 
+	public void run() { 
 		Message MessageObject = new Message();
 		int sendTimeout = 50; //전송 시 timeout을 위한 변수. 50second동안 기다린다.
 		int receiveTimeout = 100; //수신 시 timeout을 위한 변수. 100second동안 기다린다.
@@ -118,7 +118,7 @@ public void run() {
 	 * 이 메소드는 HandlerPoolManager에서 호출된다.
 	 * outgoingBuffer로부터 메시지를 하나 꺼내온다.
 	 * 값이 없으면 null을 리턴한다.
-	 ㅓ*/
+	 */
 	public Message getMessage() {
 		// TODO
 		return null;
