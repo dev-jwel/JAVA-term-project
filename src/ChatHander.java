@@ -64,9 +64,8 @@ public class ChatHander extends Thread {
 	 * 3. ingoingBuffer에 Message가 있으면 클라이언트에 보낸다.
 	 * 4. receiver가 받은 Message가 있으면 outgoingBuffer에 넣는다.
 	 */
-	public void run() { 
+public void run() { 
 		Message MessageObject = new Message();
-		MessageObject.type = MessageType.ALIVE;
 		int sendTimeout = 50; //전송 시 timeout을 위한 변수. 50second동안 기다린다.
 		int receiveTimeout = 100; //수신 시 timeout을 위한 변수. 100second동안 기다린다.
 				
@@ -86,7 +85,7 @@ public class ChatHander extends Thread {
 			//2
 			if(betweenSentCurrentSecond.getSeconds() >= sendTimeout){
 				recentlySentTime = LocalDateTime.now();
-				Object object = (Object)MessageObject.type;
+				Object object = (Object)MessageObject;
 				try {
 					outputStream.writeObject(object);
 				} catch (IOException e) {
