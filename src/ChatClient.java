@@ -74,8 +74,10 @@ public class ChatClient extends JFrame {
 			server = new Socket(URL, Port);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
+			return;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return;
 		}
 		
 		ChatClient chatClient = new ChatClient(server);
