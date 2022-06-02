@@ -61,7 +61,18 @@ public class ChatClient extends JFrame {
 	 * 이를 이용해 ChatClient 객체를 생성한다.
 	 */
 	public static void main(String[] args) {
-		// TODO
+		Socket server = null;
+		String URL = args[0];
+		int Port = Integer.parseInt(args[1]);
+		try {
+			server = new Socket(URL, Port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		ChatClient chatClient = new ChatClient(server);
 	}
 
 	/**
