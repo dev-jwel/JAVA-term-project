@@ -2,6 +2,8 @@ import java.net.Socket;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
+import java.net.UnknownHostException;
+import java.io.IOException;
 
 /**
  * 이 클래스는 클라이언트의 채팅 세션을 보여주는 GUI이다.
