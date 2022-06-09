@@ -2,6 +2,8 @@ import java.net.Socket;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
+import java.net.UnknownHostException;
+import java.io.IOException;
 
 /**
  * 이 클래스는 클라이언트의 채팅 세션을 보여주는 GUI이다.
@@ -65,7 +67,20 @@ public class ChatClient extends JFrame {
 	 * 이를 이용해 ChatClient 객체를 생성한다.
 	 */
 	public static void main(String[] args) {
-		// TODO
+		Socket server = null;
+		String URL = args[0];
+		int Port = Integer.parseInt(args[1]);
+		try {
+			server = new Socket(URL, Port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		ChatClient chatClient = new ChatClient(server);
 	}
 
 	/**
