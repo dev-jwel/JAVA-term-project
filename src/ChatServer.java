@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 /**
  * 서버 프로그램을 실행하는 클래스이다.
  * args의 값은 서버의 포트 값이다.
@@ -8,7 +12,18 @@ public class ChatServer {
 		HandlerPoolManager poolManager = new HandlerPoolManager();
 		poolManager.start();
 		
-		// TODO
+		int Port = Integer.parseInt(args[0]);
+		try {
+			ServerSocket serverSock = new ServerSocket(Port);
+			while(true){
+				Socket socket = serverSock.accept();
+				poolManager.addClient(socket);
+			}		
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+
 	}
 
 }
