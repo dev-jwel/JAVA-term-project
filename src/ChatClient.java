@@ -109,9 +109,8 @@ public class ChatClient extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
-		}
-		
-		ChatClient chatClient = new ChatClient(server);
+		}	
+		ChatClient chatClient = new ChatClient(server);	
 	}
 
 	/**
@@ -120,18 +119,18 @@ public class ChatClient extends JFrame {
 	 * panel에서 텍스트와 이미지의 gridheight는 각각 1, 5이다.
 	 */
 	public ChatClient(Socket server) {
-		super("채팅 프로그램");
-		setSize(400, 400);
-		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("채팅 프로그램");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		Container c = getContentPane();
-		chatPanel = new JPanel(gbl);
+		chatPanel = new JPanel();
 		namePanel = new JPanel();
 		sendPanel = new JPanel();
-		Scroller = new JScrollPane();
-		Scroller.add(chatPanel);
+		Scroller = new JScrollPane(chatPanel);
+		chatPanel.setLayout(gbl);
 		namePanel.add(new JLabel("이름: "));
+		namePanel.add(nameField);
 		namePanel.add(nameChangeButton);
+		sendPanel.add(textField);
 		sendPanel.add(textSendButton);
 		c.add(Scroller, BorderLayout.CENTER);
 		c.add(namePanel, BorderLayout.NORTH);
@@ -146,7 +145,6 @@ public class ChatClient extends JFrame {
 				message.name = nameField.getText();
 				backgroundClient.sendMessage(message);
 				nameField.setText("");
-				nameField.requestFocus();
 			}
 		});
 		
@@ -155,20 +153,20 @@ public class ChatClient extends JFrame {
 				message.message = textField.getText();
 				backgroundClient.sendMessage(message);
 				textField.setText("");
-				textField.requestFocus();
 				textBox = new JTextField(30);
 				add(textBox, layoutIndex, 1, chatPanel);
 			}
 		});
-				
+		
 		//BackgroundClient 스레드 생성
 		try {
 			backgroundClient = new BackgroundClient(server, this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+
+		setSize(600, 600);
+		setVisible(true);	
 	}
 	
 	 public void add(Component c, int y, int h, JPanel chatPanel) {
@@ -177,11 +175,12 @@ public class ChatClient extends JFrame {
 		 gbl.setConstraints(c, gbc);
 		 chatPanel.add(c, gbc);
 	 }
-
+	
+	
 	/**
 	 * BackgroundClient에서 호출되며, 메시지를 화면에 누적시켜 보이게 한다.
 	 */
 	public void appendMessage(Message message) {
-		// TODO
+		//TODO
 	}
 }
