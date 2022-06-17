@@ -139,22 +139,23 @@ public class ChatClient extends JFrame {
 		gbc.gridx = 0;
 		gbc.gridwidth = 1;
 		
-		Message message = new Message();
+		Message message;
 		nameChangeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
+				message = new Message();
+				message.type = MessageType.CHANGENAME;
 				message.name = nameField.getText();
 				backgroundClient.sendMessage(message);
-				nameField.setText("");
 			}
 		});
 		
 		textSendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				message = new Message();
+				message.type = MessageType.SENDTEXT;
 				message.message = textField.getText();
 				backgroundClient.sendMessage(message);
 				textField.setText("");
-				textBox = new JTextField(30);
-				add(textBox, layoutIndex, 1, chatPanel);
 			}
 		});
 		
@@ -163,6 +164,7 @@ public class ChatClient extends JFrame {
 			backgroundClient = new BackgroundClient(server, this);
 		} catch (IOException e) {
 			e.printStackTrace();
+			return;
 		}
 
 		setSize(600, 600);
@@ -175,7 +177,6 @@ public class ChatClient extends JFrame {
 		 gbl.setConstraints(c, gbc);
 		 chatPanel.add(c, gbc);
 	 }
-	
 	
 	/**
 	 * BackgroundClient에서 호출되며, 메시지를 화면에 누적시켜 보이게 한다.
