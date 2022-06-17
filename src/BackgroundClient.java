@@ -108,9 +108,9 @@ public class BackgroundClient extends Thread {
 	
 	/**
 	 * 이 메소드는 ChatClient의 리스너에서 호출된다.
-	 * ingoingBuffer에 메시지를 하나 채운다.
+	 * messageBuffer에 메시지를 하나 채운다.
 	 */
 	public void sendMessage(Message message) {
-		// TODO
+		messageBuffer.offer(message);
 	}
 }
