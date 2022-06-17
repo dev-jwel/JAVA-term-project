@@ -1,5 +1,7 @@
 import java.lang.Thread;
 import java.net.Socket;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -33,13 +35,13 @@ public class BackgroundClient extends Thread {
 	 * 이 멤버변수는 가장 최근에 데이터를 전송한 시간을 기록한다.
 	 * 클라이언트의 timeout을 막기 위해 사용된다.
 	 */
-	private int recentlySentTime;
+	LocalDateTime recentlySentTime;
 
 	/**
 	 * 이 멤버변수는 가장 최근에 받은 데이터의 수신 시간을 기록한다.
 	 * timeout을 확인하기 위해 사용한다.
 	 */
-	private int recentlyReceivedTime;
+	LocalDateTime recentlyReceivedTime;
 
 	public BackgroundClient(Socket server, ChatClient chatClient) throws IOException {
 		this.outputStream = new ObjectOutputStream(server.getOutputStream());
@@ -54,40 +56,52 @@ public class BackgroundClient extends Thread {
 	 * 3. messageBuffer에 Message가 있으면 클라이언트에 보낸다.
 	 * 4. receiver로부터 Message를 하나 얻어오고 null이 아니면 ChatClient에 appendMessage()를 통해 보낸다.
 	 */
-	public void run() {
-		int recentTime = 0;
-		
+	public void run() { 
+		Message MessageObject = new Message();
+		int sendTimeout = 50; //전송 시 timeout을 위한 변수. 50second동안 기다린다.
+		int receiveTimeout = 100; //수신 시 timeout을 위한 변수. 100second동안 기다린다.
+				
 		while(true){
-			Message MessageBufferMessage = messageBuffer.poll(); 
-			Message ReceiverMessage = receiver.getMessage();
-			recentTime += 1;
+			Message messageBufferMessage = messageBuffer.poll(); //messageBuffer에서 Message를 꺼내 ingoingBufferMessage에 저장
+			Message receiverMessage = receiver.getMessage(); //receiver에서 받은 Message를 receiverMessage에 저장
+			LocalDateTime currentTime = LocalDateTime.now(); //현재 시간측정을 위한 변수
+			Duration betweenSentCurrentSecond = Duration.between(recentlySentTime, currentTime);//recentlySentTime과 currentTime사이의 초 차이
+			Duration betweenReceivedCurrentSecond = Duration.between(recentlyReceivedTime, currentTime);//recentlyReceivedTime과 currentTime사이의 초 차이
 			
-			if(recentlyReceivedTime <= recentlySentTime){
+			//1
+			if(betweenReceivedCurrentSecond.getSeconds() >= receiveTimeout){
 				receiver.interrupt();
 				break;
-			} else if(recentlyReceivedTime - recentlySentTime == recentTime){
-				receiver.interrupt();
-				break;
-			} else {
-				Object object = (Object)MessageType.ALIVE;
+			}
+			
+			//2
+			if(betweenSentCurrentSecond.getSeconds() >= sendTimeout){
+				recentlySentTime = LocalDateTime.now();
+				Object object = (Object)MessageObject;
 				try {
 					outputStream.writeObject(object);
 				} catch (IOException e) {
 					e.printStackTrace();
+					break;
 				}
 			}
-			if(MessageBufferMessage != null){
-				Object object = (Object)MessageBufferMessage;
+			
+			//3
+			if(messageBufferMessage != null){ 
+				recentlySentTime = LocalDateTime.now();
+				Object object = (Object)messageBufferMessage;
 				try {
 					outputStream.writeObject(object);
-					recentlySentTime = 0; 
 				} catch (IOException e) {
 					e.printStackTrace();
-					}
+					break;
+				}
 			}
-			if(ReceiverMessage != null){
-				chatClient.appendMessage(ReceiverMessage);
-				recentlyReceivedTime = 0;
+			
+			//4
+			if(receiverMessage != null){ 
+				recentlyReceivedTime = LocalDateTime.now();
+				chatClient.appendMessage(receiverMessage);
 			}
 		}
 	}
