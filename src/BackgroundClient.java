@@ -77,7 +77,8 @@ public class BackgroundClient extends Thread {
 			//2
 			if(betweenSentCurrentSecond.getSeconds() >= sendTimeout){
 				recentlySentTime = LocalDateTime.now();
-				Object object = (Object)MessageObject.type.ALIVE;
+				MessageObject.type = MessageType.ALIVE;
+				Object object = (Object)MessageObject;
 				try {
 					outputStream.writeObject(object);
 				} catch (IOException e) {
