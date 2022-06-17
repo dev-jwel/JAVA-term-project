@@ -181,6 +181,10 @@ public class ChatClient extends JFrame {
 	 * BackgroundClient에서 호출되며, 메시지를 화면에 누적시켜 보이게 한다.
 	 */
 	public void appendMessage(Message message) {
-		//TODO
+		if(message.type == MessageType.SENDTEXT){
+			textBox = new JTextField();
+			add(textBox, layoutIndex, 1, chatPanel);
+			layoutIndex++;
+		}
 	}
 }
