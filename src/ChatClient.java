@@ -139,22 +139,21 @@ public class ChatClient extends JFrame {
 		gbc.gridx = 0;
 		gbc.gridwidth = 1;
 		
-		Message message;
+		Message nameMessage = new Message();
+		Message textMessage = new Message();
 		nameChangeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				message = new Message();
-				message.type = MessageType.CHANGENAME;
-				message.name = nameField.getText();
-				backgroundClient.sendMessage(message);
+				nameMessage.type = MessageType.CHANGENAME;
+				nameMessage.name = nameField.getText();
+				backgroundClient.sendMessage(nameMessage);
 			}
 		});
 		
 		textSendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				message = new Message();
-				message.type = MessageType.SENDTEXT;
-				message.message = textField.getText();
-				backgroundClient.sendMessage(message);
+				textMessage.type = MessageType.SENDTEXT;
+				textMessage.message = textField.getText();
+				backgroundClient.sendMessage(textMessage);
 				textField.setText("");
 			}
 		});
