@@ -56,10 +56,15 @@ public class ChatClient extends JFrame {
 	private JPanel sendPanel;
 	
 	/**
-	 * chatPanel에 채팅친 내용을 보이게 하기위한 필드이다.
+	 * chatPanel에 채팅친 내용을 보이게 하기위한 라벨이다.
 	 */
-	private JTextField textBox;
+	private JLabel textBox;
 
+	/**
+	 * chatPanel에 사용자의 이름을 보이게 하기위한 라벨이다.
+	 */
+	private JLabel nameBox;
+	
 	/**
 	 * 사용자가 이름을 입력할 수 있는 필드이다.
 	 */
@@ -135,7 +140,7 @@ public class ChatClient extends JFrame {
 		c.add(Scroller, BorderLayout.CENTER);
 		c.add(namePanel, BorderLayout.NORTH);
 		c.add(sendPanel, BorderLayout.SOUTH);
-		
+		gbc.fill= GridBagConstraints.NONE ; //남는 여백 채우지 않고 컴포넌트 그대로 두기
 		gbc.gridx = 0;
 		gbc.gridwidth = 1;
 		
@@ -143,18 +148,22 @@ public class ChatClient extends JFrame {
 		Message textMessage = new Message();
 		nameChangeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
+				lock.lock();
 				nameMessage.type = MessageType.CHANGENAME;
 				nameMessage.name = nameField.getText();
 				backgroundClient.sendMessage(nameMessage);
+				lock.unlock();
 			}
 		});
 		
 		textSendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				lock.lock();
 				textMessage.type = MessageType.SENDTEXT;
 				textMessage.message = textField.getText();
 				backgroundClient.sendMessage(textMessage);
 				textField.setText("");
+				lock.unlock();
 			}
 		});
 		
@@ -182,9 +191,11 @@ public class ChatClient extends JFrame {
 	 */
 	public void appendMessage(Message message) {
 		if(message.type == MessageType.SENDTEXT){
-			textBox = new JTextField();
+			lock.lock();
+			textBox = new JLabel(message.message);
 			add(textBox, layoutIndex, 1, chatPanel);
 			layoutIndex++;
+			lock.unlock();
 		}
 	}
 }
