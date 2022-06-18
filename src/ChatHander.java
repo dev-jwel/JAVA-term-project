@@ -120,9 +120,8 @@ public class ChatHander extends Thread {
 	 * 값이 없으면 null을 리턴한다.
 	 */
 	public Message getMessage() {
-		Message outgoingBufferMessage = ingoingBuffer.poll();
-		if(outgoingBufferMessage == null) return null;
-		else return outgoingBufferMessage;
+		Message OutgoingBuffer = outgoingBuffer.poll();
+		return OutgoingBuffer;
 	}
 
 	/**
