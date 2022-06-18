@@ -85,6 +85,7 @@ public class ChatHander extends Thread {
 			//2
 			if(betweenSentCurrentSecond.getSeconds() >= sendTimeout){
 				recentlySentTime = LocalDateTime.now();
+				MessageObject.type = MessageType.ALIVE;
 				Object object = (Object)MessageObject;
 				try {
 					outputStream.writeObject(object);
@@ -120,9 +121,8 @@ public class ChatHander extends Thread {
 	 * 값이 없으면 null을 리턴한다.
 	 */
 	public Message getMessage() {
-		Message outgoingBufferMessage = ingoingBuffer.poll();
-		if(outgoingBufferMessage == null) return null;
-		else return outgoingBufferMessage;
+		Message OutgoingBuffer = outgoingBuffer.poll();
+		return OutgoingBuffer;
 	}
 
 	/**
