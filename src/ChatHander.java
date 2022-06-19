@@ -85,6 +85,7 @@ public class ChatHander extends Thread {
 			//2
 			if(betweenSentCurrentSecond.getSeconds() >= sendTimeout){
 				recentlySentTime = LocalDateTime.now();
+				MessageObject.type = MessageType.ALIVE;
 				Object object = (Object)MessageObject;
 				try {
 					outputStream.writeObject(object);
