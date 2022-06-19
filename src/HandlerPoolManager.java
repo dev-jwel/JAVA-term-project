@@ -22,7 +22,17 @@ public class HandlerPoolManager extends Thread {
 	 * isAlive()로 상태를 체크하고 pool에서 제거하는 책임도 가진다.
 	 */
 	public void run() {
-		// TODO
+		while(true) {
+			for(int i = 0; i < handlerPool.size(); i++) {
+				ChatHander message = handlerPool.get(i);
+				if(!isAlive()) {
+					handlerPool.remove(message);
+				}
+				else {
+					handlerPool.add(message );
+				}
+			}
+		}
 	}
 
 	/**
