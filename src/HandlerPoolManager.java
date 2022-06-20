@@ -21,23 +21,22 @@ public class HandlerPoolManager extends Thread {
 	 * 메시지를 받아온 ChatHander에게도 보낸다.
 	 * isAlive()로 상태를 체크하고 pool에서 제거하는 책임도 가진다.
 	 */
+	
 	public void run() {
 		while(true) { // 무한루프를 돌며
-			int handlerSize = handlerPool.size();
-			for(int i = 0; i < handlerSize; i++) {
-				ChatHander handler = handlerPool.get(i); // pool의 handler에서
-				if(!isAlive()) { // isAlive()로 상태를 체크하고
+			for(int i = 0; i < handlerPool.size(); i++) {
+				ChatHander handler = handlerPool.get(i); // pool의 handler
+				if(!isAlive()) { // isAlive()로 상태를 체크
 					handlerPool.remove(handler); // pool에서 제거하는 책임도 가진다.
 				}
 				else {
-					ChatHander handlerAll = handlerPool.get(handlerSize); // 모든 pool의 ChatHander
-					Message message = handler.getMessage(); // message를
-					handlerAll.sendMessage(message); // message를 모든 pool의 ChatHander에게 보낸다.
-					handler.sendMessage(message);//message를 받아온 ChatHander에게도 보낸다.
+					Message message = handler.getMessage(); // message
+					handler.sendMessage(message); //message를 받아온 ChatHander에게도 보낸다.
 				}
 			}
 		}
 	}
+	
 	/**
 	 * ChatServer에서 호출하는 메소드이다.
 	 * 받아온 소켓으로 ChatHander 스레드를 새로이 생성하고 pool에 넣어 관리한다.
