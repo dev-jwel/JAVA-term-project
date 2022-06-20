@@ -23,14 +23,17 @@ public class HandlerPoolManager extends Thread {
 	 */
 	public void run() {
 		while(true) { // 무한루프를 돌며
-			for(int i = 0; i < handlerPool.size(); i++) {
+			int handlerSize = handlerPool.size();
+			for(int i = 0; i < handlerSize; i++) {
 				ChatHander handler = handlerPool.get(i); // pool의 handler에서
-				Message message = handler.getMessage(); // message를
 				if(!isAlive()) { // isAlive()로 상태를 체크하고
 					handlerPool.remove(handler); // pool에서 제거하는 책임도 가진다.
 				}
 				else {
-					handler.sendMessage(message); // message를 받아온 ChatHander에게도 보낸다.
+					ChatHander handlerAll = handlerPool.get(handlerSize); // 모든 pool의 ChatHander
+					Message message = handler.getMessage(); // message를
+					handlerAll.sendMessage(message); // message를 모든 pool의 ChatHander에게 보낸다.
+					handler.sendMessage(message);//message를 받아온 ChatHander에게도 보낸다.
 				}
 			}
 		}
