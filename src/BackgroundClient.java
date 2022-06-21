@@ -60,6 +60,8 @@ public class BackgroundClient extends Thread {
 		Message MessageObject = new Message();
 		int sendTimeout = 50; //전송 시 timeout을 위한 변수. 50second동안 기다린다.
 		int receiveTimeout = 100; //수신 시 timeout을 위한 변수. 100second동안 기다린다.
+		recentlySentTime = LocalDateTime.now();
+		recentlyReceivedTime = LocalDateTime.now();
 				
 		while(true){
 			Message messageBufferMessage = messageBuffer.poll(); //messageBuffer에서 Message를 꺼내 ingoingBufferMessage에 저장
