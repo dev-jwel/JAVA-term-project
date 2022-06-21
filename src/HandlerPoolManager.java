@@ -31,7 +31,11 @@ public class HandlerPoolManager extends Thread {
 				}
 				else {
 					Message message = handler.getMessage(); // message
-					handler.sendMessage(message); //message를 받아온 ChatHander에게도 보낸다.
+					for(int j = 0 ; j < handlerPool.size(); j++) {
+						ChatHander handlerJ = handlerPool.get(j);
+						handlerJ.sendMessage(message);
+					} // message를 모든 pool의 ChatHander에게 보내준다.
+					handler.sendMessage(message); // message를 받아온 ChatHander에게도 보낸다.
 				}
 			}
 		}
