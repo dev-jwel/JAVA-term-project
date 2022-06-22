@@ -30,6 +30,8 @@ public class BackgroundClient extends Thread {
 	 * Message 객체 임시저장소이다.
 	 */
 	private ConcurrentLinkedQueue<Message> messageBuffer = new ConcurrentLinkedQueue<Message>();
+	
+	private Socket server;
 
 	/**
 	 * 이 멤버변수는 가장 최근에 데이터를 전송한 시간을 기록한다.
@@ -44,6 +46,8 @@ public class BackgroundClient extends Thread {
 	LocalDateTime recentlyReceivedTime;
 
 	public BackgroundClient(Socket server, ChatClient chatClient) throws IOException {
+		this.server = server;
+		this.chatClient = chatClient;
 		this.outputStream = new ObjectOutputStream(server.getOutputStream());
 		this.receiver = new ChatReceiver(server.getInputStream());
 		this.receiver.start();
