@@ -94,9 +94,11 @@ public class ChatClient extends JFrame {
 	 */
 	private JButton imageSendButton = new JButton();
 
-	private GridBagLayout gbl= new GridBagLayout();
+	private GridBagLayout gbl = new GridBagLayout();
 
 	private GridBagConstraints gbc = new GridBagConstraints();
+
+	private JFrame mainFrame;
 
 	/**
 	 * args의 첫번째 값은 서버의 주소이고 두번째 값은 포트 번호이다.
@@ -124,6 +126,7 @@ public class ChatClient extends JFrame {
 	 * panel에서 텍스트와 이미지의 gridheight는 각각 1, 5이다.
 	 */
 	public ChatClient(Socket server) {
+		mainFrame = this;
 		setTitle("채팅 프로그램");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container c = getContentPane();
@@ -189,6 +192,7 @@ public class ChatClient extends JFrame {
 		gbc.gridheight = h;
 		gbl.setConstraints(c, gbc);
 		chatPanel.add(c, gbc);
+		SwingUtilities.updateComponentTreeUI(mainFrame);
 		System.out.println("[ChatClient.add] number of message is " + chatPanel.getComponentCount());
 	 }
 
