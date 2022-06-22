@@ -66,6 +66,8 @@ public class ChatHander extends Thread {
 	 */
 	public void run() { 
 		Message MessageObject = new Message();
+		recentlySentTime = LocalDateTime.now(); //recentlySentTime 초기화
+		recentlyReceivedTime = LocalDateTime.now(); //recentlyReceivedTime 초기화
 		int sendTimeout = 50; //전송 시 timeout을 위한 변수. 50second동안 기다린다.
 		int receiveTimeout = 100; //수신 시 timeout을 위한 변수. 100second동안 기다린다.
 				
