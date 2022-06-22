@@ -183,10 +183,11 @@ public class ChatClient extends JFrame {
 	}
 
 	 public void add(Component c, int y, int h, JPanel chatPanel) {
-		 gbc.gridy = y;
-		 gbc.gridheight = h;
-		 gbl.setConstraints(c, gbc);
-		 chatPanel.add(c, gbc);
+		gbc.gridy = y;
+		gbc.gridheight = h;
+		gbl.setConstraints(c, gbc);
+		chatPanel.add(c, gbc);
+		System.out.println("[ChatClient.add] number of message is " + chatPanel.getComponentCount());
 	 }
 
 	/**
