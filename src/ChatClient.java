@@ -171,7 +171,7 @@ public class ChatClient extends JFrame {
 
 		//BackgroundClient 스레드 생성
 		try {
-			backgroundClient = new BackgroundClient(server, new ChatClient(server));
+			backgroundClient = new BackgroundClient(server, this);
 			backgroundClient.start();
 		} catch (IOException e) {
 			e.printStackTrace();
