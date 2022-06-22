@@ -103,6 +103,7 @@ public class BackgroundClient extends Thread {
 			
 			//4
 			if(receiverMessage != null){ 
+				chatClient = new ChatClient(null);
 				recentlyReceivedTime = LocalDateTime.now();
 				chatClient.appendMessage(receiverMessage);
 			}
