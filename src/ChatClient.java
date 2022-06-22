@@ -39,22 +39,22 @@ public class ChatClient extends JFrame {
 	 * 채팅 내용을 보여주는 영역이다.
 	 */
 	private JPanel chatPanel;
-	
+
 	/**
 	 * 채팅 내용을 스크롤하기 위해 필요한 JScrollPane이다.
 	 */
 	private JScrollPane Scroller;
-	
+
 	/**
 	 * 이름 관련 컴포넌트들을 배치시킬 영역이다.
 	 */
 	private JPanel namePanel;
-	
+
 	/**
 	 * 채팅 보내기 관련 컴포넌트들을 배치시킬 영역이다.
 	 */
 	private JPanel sendPanel;
-	
+
 	/**
 	 * chatPanel에 채팅친 내용을 보이게 하기위한 라벨이다.
 	 */
@@ -64,7 +64,7 @@ public class ChatClient extends JFrame {
 	 * chatPanel에 사용자의 이름을 보이게 하기위한 라벨이다.
 	 */
 	private JLabel nameBox;
-	
+
 	/**
 	 * 사용자가 이름을 입력할 수 있는 필드이다.
 	 */
@@ -93,9 +93,9 @@ public class ChatClient extends JFrame {
 	 * swing의 파일 선택 기능을 이용하여 이미지 파일을 얻은 후, 이의 내용을 서버로 보내야 한다.
 	 */
 	private JButton imageSendButton = new JButton();
-	
+
 	private GridBagLayout gbl= new GridBagLayout();
-	
+
 	private GridBagConstraints gbc = new GridBagConstraints();
 
 	/**
@@ -114,8 +114,8 @@ public class ChatClient extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
-		}	
-		ChatClient chatClient = new ChatClient(server);	
+		}
+		ChatClient chatClient = new ChatClient(server);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class ChatClient extends JFrame {
 	 */
 	public ChatClient(Socket server) {
 		setTitle("채팅 프로그램");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container c = getContentPane();
 		chatPanel = new JPanel();
 		namePanel = new JPanel();
@@ -143,11 +143,12 @@ public class ChatClient extends JFrame {
 		gbc.fill= GridBagConstraints.NONE ; //남는 여백 채우지 않고 컴포넌트 그대로 두기
 		gbc.gridx = 0;
 		gbc.gridwidth = 1;
-		
+
 		Message nameMessage = new Message();
 		Message textMessage = new Message();
 		nameChangeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
+				System.out.println("[ChatClient.nameChangeButton] clicked");
 				lock.lock();
 				nameMessage.type = MessageType.CHANGENAME;
 				nameMessage.name = nameField.getText();
@@ -155,9 +156,10 @@ public class ChatClient extends JFrame {
 				lock.unlock();
 			}
 		});
-		
+
 		textSendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("[ChatClient.textChangeButton] clicked");
 				lock.lock();
 				textMessage.type = MessageType.SENDTEXT;
 				textMessage.message = textField.getText();
@@ -166,26 +168,27 @@ public class ChatClient extends JFrame {
 				lock.unlock();
 			}
 		});
-		
+
 		//BackgroundClient 스레드 생성
 		try {
 			backgroundClient = new BackgroundClient(server, this);
+			backgroundClient.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
 
 		setSize(600, 600);
-		setVisible(true);	
+		setVisible(true);
 	}
-	
+
 	 public void add(Component c, int y, int h, JPanel chatPanel) {
 		 gbc.gridy = y;
 		 gbc.gridheight = h;
 		 gbl.setConstraints(c, gbc);
 		 chatPanel.add(c, gbc);
 	 }
-	
+
 	/**
 	 * BackgroundClient에서 호출되며, 메시지를 화면에 누적시켜 보이게 한다.
 	 */
