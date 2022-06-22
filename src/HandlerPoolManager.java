@@ -33,7 +33,8 @@ public class HandlerPoolManager extends Thread {
 				else {
 					Message message = handler.getMessage(); // message
 					if(message != null) {
-						System.out.println("[HandlerPoolManager.run] forward" + i + "th handler's message");
+						System.out.println("[HandlerPoolManager.run] forward " + i + "th handler's message");
+						Utils.logMessage("[HandlerPoolManager.run]", message);
 						for(int j = 0 ; j < handlerPool.size(); j++) {
 							ChatHander handlerJ = handlerPool.get(j);
 							handlerJ.sendMessage(message);

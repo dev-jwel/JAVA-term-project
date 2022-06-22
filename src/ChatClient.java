@@ -152,6 +152,7 @@ public class ChatClient extends JFrame {
 				lock.lock();
 				nameMessage.type = MessageType.CHANGENAME;
 				nameMessage.name = nameField.getText();
+				System.out.println("[ChatClient.nameChangeButton] " + nameMessage.name);
 				backgroundClient.sendMessage(nameMessage);
 				lock.unlock();
 			}
@@ -163,6 +164,7 @@ public class ChatClient extends JFrame {
 				lock.lock();
 				textMessage.type = MessageType.SENDTEXT;
 				textMessage.message = textField.getText();
+				System.out.println("[ChatClient.textChangeButton] " + textMessage.message);
 				backgroundClient.sendMessage(textMessage);
 				textField.setText("");
 				lock.unlock();
@@ -183,10 +185,11 @@ public class ChatClient extends JFrame {
 	}
 
 	 public void add(Component c, int y, int h, JPanel chatPanel) {
-		 gbc.gridy = y;
-		 gbc.gridheight = h;
-		 gbl.setConstraints(c, gbc);
-		 chatPanel.add(c, gbc);
+		gbc.gridy = y;
+		gbc.gridheight = h;
+		gbl.setConstraints(c, gbc);
+		chatPanel.add(c, gbc);
+		System.out.println("[ChatClient.add] number of message is " + chatPanel.getComponentCount());
 	 }
 
 	/**
@@ -194,6 +197,7 @@ public class ChatClient extends JFrame {
 	 */
 	public void appendMessage(Message message) {
 		if(message.type == MessageType.SENDTEXT){
+			System.out.println("[ChatClient.appendMessage] SENDTEXT " + message.message);
 			lock.lock();
 			textBox = new JLabel(message.message);
 			add(textBox, layoutIndex, 1, chatPanel);

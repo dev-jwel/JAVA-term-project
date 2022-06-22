@@ -39,16 +39,8 @@ public class ChatReceiver extends Thread {
 				object = inputStream.readObject();
 				message = (Message)object;
 
-				String debugText = "[ChatReceiver.run] ";
-				switch (message.type) {
-					case ALIVE: debugText += "ALIVE"; break;
-					case CHANGENAME: debugText += "CHANGENAME"; break;
-					case SENDTEXT: debugText += "SENDTEXT"; break;
-					case SENDIMAGE: debugText += "SENDIMAGE"; break;
-					case SENDMESSAGE: debugText += "SENDMESSAGE"; break;
-				}
-				System.out.println(debugText);
-				
+				Utils.logMessage("[ChatReceiver.run]", message);
+
 				messageBuffer.add(message);
 			} catch (Exception e) {
 				e.printStackTrace();

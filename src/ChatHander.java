@@ -92,6 +92,7 @@ public class ChatHander extends Thread {
 				MessageObject.type = MessageType.ALIVE;
 				Object object = (Object)MessageObject;
 				try {
+					outputStream.reset();
 					outputStream.writeObject(object);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -101,10 +102,12 @@ public class ChatHander extends Thread {
 
 			//3
 			if(ingoingBufferMessage != null){
-				System.out.println("[ChatHander.run] message received from other client");
+				System.out.println("[ChatHandler.run] message received from other client");
+				Utils.logMessage("[ChatHandler.run]", ingoingBufferMessage);
 				recentlySentTime = LocalDateTime.now();
 				Object object = (Object)ingoingBufferMessage;
 				try {
+					outputStream.reset();
 					outputStream.writeObject(object);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -114,7 +117,8 @@ public class ChatHander extends Thread {
 
 			//4
 			if(receiverMessage != null){
-				System.out.println("[ChatHander.run] message received from this client");
+				System.out.println("[ChatHandler.run] message received from this client");
+				Utils.logMessage("[ChatHandler.run]", receiverMessage);
 				recentlyReceivedTime = LocalDateTime.now();
 				outgoingBuffer.offer(receiverMessage);
 			}
