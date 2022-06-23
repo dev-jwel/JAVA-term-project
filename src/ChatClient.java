@@ -144,19 +144,18 @@ public class ChatClient extends JFrame {
 		c.add(namePanel, BorderLayout.NORTH);
 		c.add(sendPanel, BorderLayout.SOUTH);
 		gbc.fill= GridBagConstraints.NONE ; //남는 여백 채우지 않고 컴포넌트 그대로 두기
-		gbc.gridx = 0;
 		gbc.gridwidth = 1;
 
-		Message nameMessage = new Message();
-		Message textMessage = new Message();
+		Message sendMessage = new Message();
 		nameChangeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				System.out.println("[ChatClient.nameChangeButton] clicked");
 				lock.lock();
-				nameMessage.type = MessageType.CHANGENAME;
-				nameMessage.name = nameField.getText();
-				System.out.println("[ChatClient.nameChangeButton] " + nameMessage.name);
-				backgroundClient.sendMessage(nameMessage);
+				sendMessage.type = MessageType.CHANGENAME;
+				sendMessage.name = nameField.getText();
+				System.out.println("[ChatClient.nameChangeButton] " + sendMessage.name);
+				backgroundClient.sendMessage(sendMessage);
+				nameField.setText(sendMessage.name);
 				lock.unlock();
 			}
 		});
@@ -165,10 +164,10 @@ public class ChatClient extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("[ChatClient.textChangeButton] clicked");
 				lock.lock();
-				textMessage.type = MessageType.SENDTEXT;
-				textMessage.message = textField.getText();
-				System.out.println("[ChatClient.textChangeButton] " + textMessage.message);
-				backgroundClient.sendMessage(textMessage);
+				sendMessage.type = MessageType.SENDTEXT;
+				sendMessage.message = textField.getText();
+				System.out.println("[ChatClient.textChangeButton] " + sendMessage.message);
+				backgroundClient.sendMessage(sendMessage);
 				textField.setText("");
 				lock.unlock();
 			}
@@ -182,12 +181,13 @@ public class ChatClient extends JFrame {
 			e.printStackTrace();
 			return;
 		}
-
+		
 		setSize(600, 600);
 		setVisible(true);
 	}
 
-	 public void add(Component c, int y, int h, JPanel chatPanel) {
+	 public void add(Component c, int x, int y, int h, JPanel chatPanel) {
+		gbc.gridx = x;
 		gbc.gridy = y;
 		gbc.gridheight = h;
 		gbl.setConstraints(c, gbc);
@@ -203,8 +203,12 @@ public class ChatClient extends JFrame {
 		if(message.type == MessageType.SENDTEXT){
 			System.out.println("[ChatClient.appendMessage] SENDTEXT " + message.message);
 			lock.lock();
+			JPanel totalChatBox = new JPanel();
+			nameBox = new JLabel(message.name + ": ");
 			textBox = new JLabel(message.message);
-			add(textBox, layoutIndex, 1, chatPanel);
+			totalChatBox.add(nameBox);
+			totalChatBox.add(textBox);
+			add(totalChatBox, 0, layoutIndex, 1, chatPanel);
 			layoutIndex++;
 			lock.unlock();
 		}
