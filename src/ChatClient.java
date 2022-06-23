@@ -146,17 +146,16 @@ public class ChatClient extends JFrame {
 		gbc.fill= GridBagConstraints.NONE ; //남는 여백 채우지 않고 컴포넌트 그대로 두기
 		gbc.gridwidth = 1;
 
-		Message nameMessage = new Message();
-		Message textMessage = new Message();
+		Message sendMessage = new Message();
 		nameChangeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				System.out.println("[ChatClient.nameChangeButton] clicked");
 				lock.lock();
-				nameMessage.type = MessageType.CHANGENAME;
-				nameMessage.name = nameField.getText();
-				System.out.println("[ChatClient.nameChangeButton] " + nameMessage.name);
-				backgroundClient.sendMessage(nameMessage);
-				nameField.setText(nameMessage.name);
+				sendMessage.type = MessageType.CHANGENAME;
+				sendMessage.name = nameField.getText();
+				System.out.println("[ChatClient.nameChangeButton] " + sendMessage.name);
+				backgroundClient.sendMessage(sendMessage);
+				nameField.setText(sendMessage.name);
 				lock.unlock();
 			}
 		});
@@ -165,10 +164,10 @@ public class ChatClient extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("[ChatClient.textChangeButton] clicked");
 				lock.lock();
-				textMessage.type = MessageType.SENDTEXT;
-				textMessage.message = textField.getText();
-				System.out.println("[ChatClient.textChangeButton] " + textMessage.message);
-				backgroundClient.sendMessage(textMessage);
+				sendMessage.type = MessageType.SENDTEXT;
+				sendMessage.message = textField.getText();
+				System.out.println("[ChatClient.textChangeButton] " + sendMessage.message);
+				backgroundClient.sendMessage(sendMessage);
 				textField.setText("");
 				lock.unlock();
 			}
@@ -182,7 +181,7 @@ public class ChatClient extends JFrame {
 			e.printStackTrace();
 			return;
 		}
-
+		
 		setSize(600, 600);
 		setVisible(true);
 	}
@@ -201,18 +200,15 @@ public class ChatClient extends JFrame {
 	 * BackgroundClient에서 호출되며, 메시지를 화면에 누적시켜 보이게 한다.
 	 */
 	public void appendMessage(Message message) {
-		if(message.type == MessageType.CHANGENAME){
-			System.out.println("[ChatClient.appendMessage] CHANGENAME " + message.name);
-			lock.lock();
-			nameBox = new JLabel(message.name + ": ");
-			lock.unlock();
-		}
 		if(message.type == MessageType.SENDTEXT){
 			System.out.println("[ChatClient.appendMessage] SENDTEXT " + message.message);
 			lock.lock();
+			JPanel totalChatBox = new JPanel();
+			nameBox = new JLabel(message.name + ": ");
 			textBox = new JLabel(message.message);
-			add(nameBox, 0, layoutIndex, 1, chatPanel);
-			add(textBox, 1, layoutIndex, 1, chatPanel);
+			totalChatBox.add(nameBox);
+			totalChatBox.add(textBox);
+			add(totalChatBox, 0, layoutIndex, 1, chatPanel);
 			layoutIndex++;
 			lock.unlock();
 		}
