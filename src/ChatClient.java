@@ -81,7 +81,7 @@ public class ChatClient extends JFrame {
 	/**
 	 * 이름 변경을 요청하는 버튼이다.
 	 */
-	private JButton nameChangeButton = new JButton("이름 변겅");
+	private JButton nameChangeButton = new JButton("이름 변경");
 
 	/**
 	 * 텍스트 메시지를 전송하는 버튼이다.
