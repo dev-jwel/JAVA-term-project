@@ -170,6 +170,7 @@ public class ChatClient extends JFrame {
 					}
 					sendMessage.type = MessageType.SENDIMAGE;
 					sendMessage.image = imageMessage;
+					backgroundClient.sendMessage(sendMessage);
 				}
 				lock.unlock();
 			}
