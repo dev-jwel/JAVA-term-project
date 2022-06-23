@@ -94,9 +94,11 @@ public class ChatClient extends JFrame {
 	 */
 	private JButton imageSendButton = new JButton();
 
-	private GridBagLayout gbl= new GridBagLayout();
+	private GridBagLayout gbl = new GridBagLayout();
 
 	private GridBagConstraints gbc = new GridBagConstraints();
+
+	private JFrame mainFrame;
 
 	/**
 	 * args의 첫번째 값은 서버의 주소이고 두번째 값은 포트 번호이다.
@@ -124,6 +126,7 @@ public class ChatClient extends JFrame {
 	 * panel에서 텍스트와 이미지의 gridheight는 각각 1, 5이다.
 	 */
 	public ChatClient(Socket server) {
+		mainFrame = this;
 		setTitle("채팅 프로그램");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container c = getContentPane();
@@ -141,7 +144,6 @@ public class ChatClient extends JFrame {
 		c.add(namePanel, BorderLayout.NORTH);
 		c.add(sendPanel, BorderLayout.SOUTH);
 		gbc.fill= GridBagConstraints.NONE ; //남는 여백 채우지 않고 컴포넌트 그대로 두기
-		gbc.gridx = 0;
 		gbc.gridwidth = 1;
 
 		Message nameMessage = new Message();
@@ -152,7 +154,9 @@ public class ChatClient extends JFrame {
 				lock.lock();
 				nameMessage.type = MessageType.CHANGENAME;
 				nameMessage.name = nameField.getText();
+				System.out.println("[ChatClient.nameChangeButton] " + nameMessage.name);
 				backgroundClient.sendMessage(nameMessage);
+				nameField.setText(nameMessage.name);
 				lock.unlock();
 			}
 		});
@@ -163,6 +167,7 @@ public class ChatClient extends JFrame {
 				lock.lock();
 				textMessage.type = MessageType.SENDTEXT;
 				textMessage.message = textField.getText();
+				System.out.println("[ChatClient.textChangeButton] " + textMessage.message);
 				backgroundClient.sendMessage(textMessage);
 				textField.setText("");
 				lock.unlock();
@@ -177,26 +182,39 @@ public class ChatClient extends JFrame {
 			e.printStackTrace();
 			return;
 		}
-
+		
 		setSize(600, 600);
 		setVisible(true);
 	}
 
-	 public void add(Component c, int y, int h, JPanel chatPanel) {
-		 gbc.gridy = y;
-		 gbc.gridheight = h;
-		 gbl.setConstraints(c, gbc);
-		 chatPanel.add(c, gbc);
+	 public void add(Component c, int x, int y, int h, JPanel chatPanel) {
+		gbc.gridx = x;
+		gbc.gridy = y;
+		gbc.gridheight = h;
+		gbl.setConstraints(c, gbc);
+		chatPanel.add(c, gbc);
+		SwingUtilities.updateComponentTreeUI(mainFrame);
+		System.out.println("[ChatClient.add] number of message is " + chatPanel.getComponentCount());
 	 }
 
 	/**
 	 * BackgroundClient에서 호출되며, 메시지를 화면에 누적시켜 보이게 한다.
 	 */
 	public void appendMessage(Message message) {
+		if(message.type == MessageType.CHANGENAME){
+			System.out.println("[ChatClient.appendMessage] CHANGENAME " + message.name);
+			lock.lock();
+			nameBox = new JLabel(message.name + ": ");
+			lock.unlock();
+		}
 		if(message.type == MessageType.SENDTEXT){
+			System.out.println("[ChatClient.appendMessage] SENDTEXT " + message.message);
 			lock.lock();
 			textBox = new JLabel(message.message);
-			add(textBox, layoutIndex, 1, chatPanel);
+			JPanel totalChatBox = new JPanel();
+			totalChatBox.add(nameBox);
+			totalChatBox.add(textBox);
+			add(totalChatBox, 0, layoutIndex, 1, chatPanel);
 			layoutIndex++;
 			lock.unlock();
 		}
