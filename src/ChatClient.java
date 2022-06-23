@@ -1,4 +1,5 @@
 import java.net.Socket;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
@@ -8,8 +9,10 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -92,7 +95,7 @@ public class ChatClient extends JFrame {
 	 * 이미지 메시지를 보내는 기능을 갖는 버튼이다.
 	 * swing의 파일 선택 기능을 이용하여 이미지 파일을 얻은 후, 이의 내용을 서버로 보내야 한다.
 	 */
-	private JButton imageSendButton = new JButton();
+	private JButton imageSendButton = new JButton("이미지 전송");
 
 	private GridBagLayout gbl = new GridBagLayout();
 
@@ -138,6 +141,7 @@ public class ChatClient extends JFrame {
 		namePanel.add(new JLabel("이름: "));
 		namePanel.add(nameField);
 		namePanel.add(nameChangeButton);
+		namePanel.add(imageSendButton);
 		sendPanel.add(textField);
 		sendPanel.add(textSendButton);
 		c.add(Scroller, BorderLayout.CENTER);
@@ -145,8 +149,33 @@ public class ChatClient extends JFrame {
 		c.add(sendPanel, BorderLayout.SOUTH);
 		gbc.fill= GridBagConstraints.NONE ; //남는 여백 채우지 않고 컴포넌트 그대로 두기
 		gbc.gridwidth = 1;
-
+		
 		Message sendMessage = new Message();
+		
+		imageSendButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				System.out.println("[ChatClient.imageSendButton] clicked");
+				JFileChooser fileChooser = new JFileChooser();
+				int returnVal = fileChooser.showOpenDialog(mainFrame);
+				SerializableImage imageMessage;
+				lock.lock();
+				if(returnVal == JFileChooser.APPROVE_OPTION){
+					File imageFile = new File("fileChooser.getSelectedFile().getPath()");
+					try {
+						Image image  = ImageIO.read(imageFile);
+						imageMessage = new SerializableImage(image);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+						return;
+					}
+					sendMessage.type = MessageType.SENDIMAGE;
+					sendMessage.image = imageMessage;
+					backgroundClient.sendMessage(sendMessage);
+				}
+				lock.unlock();
+			}
+		});
+		
 		nameChangeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				System.out.println("[ChatClient.nameChangeButton] clicked");
@@ -209,6 +238,19 @@ public class ChatClient extends JFrame {
 			totalChatBox.add(nameBox);
 			totalChatBox.add(textBox);
 			add(totalChatBox, 0, layoutIndex, 1, chatPanel);
+			layoutIndex++;
+			lock.unlock();
+		}
+		if(message.type == MessageType.SENDIMAGE){
+			System.out.println("[ChatClient.appendMessage] SENDIMAGE ");
+			lock.lock();
+			JPanel totalChatBox = new JPanel();
+			nameBox = new JLabel(message.name + ": ");
+			ImageIcon imgicon = new ImageIcon(message.image);
+			JLabel imgLabel = new JLabel(imgicon);
+			totalChatBox.add(nameBox);
+			totalChatBox.add(imgLabel);
+			add(totalChatBox, 0, layoutIndex, 5, chatPanel);
 			layoutIndex++;
 			lock.unlock();
 		}
