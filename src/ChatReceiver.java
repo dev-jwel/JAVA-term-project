@@ -38,6 +38,9 @@ public class ChatReceiver extends Thread {
 			try {
 				object = inputStream.readObject();
 				message = (Message)object;
+
+				Utils.logMessage("[ChatReceiver.run]", message);
+
 				messageBuffer.add(message);
 			} catch (Exception e) {
 				e.printStackTrace();

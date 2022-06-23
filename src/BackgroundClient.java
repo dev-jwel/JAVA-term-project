@@ -30,7 +30,7 @@ public class BackgroundClient extends Thread {
 	 * Message 객체 임시저장소이다.
 	 */
 	private ConcurrentLinkedQueue<Message> messageBuffer = new ConcurrentLinkedQueue<Message>();
-	
+
 	private Socket server;
 
 	/**
@@ -88,6 +88,7 @@ public class BackgroundClient extends Thread {
 				MessageObject.type = MessageType.ALIVE;
 				Object object = (Object)MessageObject;
 				try {
+					outputStream.reset();
 					outputStream.writeObject(object);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -98,9 +99,12 @@ public class BackgroundClient extends Thread {
 			//3
 			if(messageBufferMessage != null){
 				System.out.println("[BackgroundClient.run] message received from ChatClient");
+				Utils.logMessage("[BackgroundClient.run]", messageBufferMessage);
 				recentlySentTime = LocalDateTime.now();
 				Object object = (Object)messageBufferMessage;
+
 				try {
+					outputStream.reset();
 					outputStream.writeObject(object);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -111,6 +115,7 @@ public class BackgroundClient extends Thread {
 			//4
 			if(receiverMessage != null){
 				System.out.println("[BackgroundClient.run] message received from server");
+				Utils.logMessage("[BackgroundClient.run]", receiverMessage);
 				recentlyReceivedTime = LocalDateTime.now();
 				chatClient.appendMessage(receiverMessage);
 			}

@@ -3,3 +3,13 @@ apply plugin: 'java'
 sourceSets {
 	main.java.srcDirs = ['src']
 }
+
+task runServer(type:JavaExec) {
+	classpath sourceSets.main.runtimeClasspath
+	main = "ChatServer"
+}
+
+task runClient(type:JavaExec) {
+	classpath sourceSets.main.runtimeClasspath
+	main = "ChatClient"
+}
