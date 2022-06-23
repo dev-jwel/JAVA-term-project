@@ -211,10 +211,8 @@ public class ChatClient extends JFrame {
 			System.out.println("[ChatClient.appendMessage] SENDTEXT " + message.message);
 			lock.lock();
 			textBox = new JLabel(message.message);
-			JPanel totalChatBox = new JPanel();
-			totalChatBox.add(nameBox);
-			totalChatBox.add(textBox);
-			add(totalChatBox, 0, layoutIndex, 1, chatPanel);
+			add(nameBox, 0, layoutIndex, 1, chatPanel);
+			add(textBox, 1, layoutIndex, 1, chatPanel);
 			layoutIndex++;
 			lock.unlock();
 		}
