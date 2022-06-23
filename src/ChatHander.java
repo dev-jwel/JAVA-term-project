@@ -64,53 +64,61 @@ public class ChatHander extends Thread {
 	 * 3. ingoingBuffer에 Message가 있으면 클라이언트에 보낸다.
 	 * 4. receiver가 받은 Message가 있으면 outgoingBuffer에 넣는다.
 	 */
-	public void run() { 
+	public void run() {
 		Message MessageObject = new Message();
 		recentlySentTime = LocalDateTime.now(); //recentlySentTime 초기화
 		recentlyReceivedTime = LocalDateTime.now(); //recentlyReceivedTime 초기화
 		int sendTimeout = 50; //전송 시 timeout을 위한 변수. 50second동안 기다린다.
 		int receiveTimeout = 100; //수신 시 timeout을 위한 변수. 100second동안 기다린다.
-				
+
 		while(true){
 			Message ingoingBufferMessage = ingoingBuffer.poll(); //ingoingBuffer에서 Message를 꺼내 ingoingBufferMessage에 저장
 			Message receiverMessage = receiver.getMessage(); //receiver에서 받은 Message를 receiverMessage에 저장
 			LocalDateTime currentTime = LocalDateTime.now(); //현재 시간측정을 위한 변수
 			Duration betweenSentCurrentSecond = Duration.between(recentlySentTime, currentTime);//recentlySentTime과 currentTime사이의 초 차이
 			Duration betweenReceivedCurrentSecond = Duration.between(recentlyReceivedTime, currentTime);//recentlyReceivedTime과 currentTime사이의 초 차이
-			
+
 			//1
 			if(betweenReceivedCurrentSecond.getSeconds() >= receiveTimeout){
+				System.out.println("[ChatHander.run] receive timeout");
 				receiver.interrupt();
 				break;
 			}
-			
+
 			//2
 			if(betweenSentCurrentSecond.getSeconds() >= sendTimeout){
+				System.out.println("[ChatHander.run] send timeout");
 				recentlySentTime = LocalDateTime.now();
 				MessageObject.type = MessageType.ALIVE;
 				Object object = (Object)MessageObject;
 				try {
+					outputStream.reset();
 					outputStream.writeObject(object);
 				} catch (IOException e) {
 					e.printStackTrace();
 					break;
 				}
 			}
-			
+
 			//3
-			if(ingoingBufferMessage != null){ 
+			if(ingoingBufferMessage != null){
+				System.out.println("[ChatHandler.run] message received from other client");
+				Utils.logMessage("[ChatHandler.run]", ingoingBufferMessage);
 				recentlySentTime = LocalDateTime.now();
 				Object object = (Object)ingoingBufferMessage;
 				try {
+					outputStream.reset();
 					outputStream.writeObject(object);
 				} catch (IOException e) {
 					e.printStackTrace();
 					break;
 				}
 			}
-			
+
 			//4
-			if(receiverMessage != null){ 
+			if(receiverMessage != null){
+				System.out.println("[ChatHandler.run] message received from this client");
+				Utils.logMessage("[ChatHandler.run]", receiverMessage);
 				recentlyReceivedTime = LocalDateTime.now();
 				outgoingBuffer.offer(receiverMessage);
 			}

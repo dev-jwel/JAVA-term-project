@@ -182,7 +182,7 @@ public class ChatClient extends JFrame {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		setSize(600, 600);
 		setVisible(true);
 	}

@@ -11,14 +11,15 @@ public class ChatServer {
 	public static void main(String[] args) {
 		HandlerPoolManager poolManager = new HandlerPoolManager();
 		poolManager.start();
-		
+
 		int Port = Integer.parseInt(args[0]);
 		try {
 			ServerSocket serverSock = new ServerSocket(Port);
 			while(true){
 				Socket socket = serverSock.accept();
+				System.out.println("[ChatServer.main] new connection " + socket.getInetAddress() + ":" + socket.getPort());
 				poolManager.addClient(socket);
-			}		
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
