@@ -246,9 +246,10 @@ public class ChatClient extends JFrame {
 			lock.lock();
 			JPanel totalChatBox = new JPanel();
 			nameBox = new JLabel(message.name + ": ");
-			ImageIcon img = new ImageIcon(message.image);
+			ImageIcon imgicon = new ImageIcon(message.image);
+			JLabel imgLabel = new JLabel(imgicon);
 			totalChatBox.add(nameBox);
-			totalChatBox.add(img);
+			totalChatBox.add(imgLabel);
 			add(totalChatBox, 0, layoutIndex, 5, chatPanel);
 			layoutIndex++;
 			lock.unlock();
