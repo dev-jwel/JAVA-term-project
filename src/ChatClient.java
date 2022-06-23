@@ -149,9 +149,9 @@ public class ChatClient extends JFrame {
 		c.add(sendPanel, BorderLayout.SOUTH);
 		gbc.fill= GridBagConstraints.NONE ; //남는 여백 채우지 않고 컴포넌트 그대로 두기
 		gbc.gridwidth = 1;
-		
+
 		Message sendMessage = new Message();
-		
+
 		imageSendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				System.out.println("[ChatClient.imageSendButton] clicked");
@@ -160,9 +160,10 @@ public class ChatClient extends JFrame {
 				SerializableImage imageMessage;
 				lock.lock();
 				if(returnVal == JFileChooser.APPROVE_OPTION){
-					File imageFile = new File("fileChooser.getSelectedFile().getPath()");
+					File imageFile = new File(fileChooser.getSelectedFile().getPath());
 					try {
 						Image image  = ImageIO.read(imageFile);
+						image = image.getScaledInstance(80, 60, Image.SCALE_SMOOTH);
 						imageMessage = new SerializableImage(image);
 					} catch (IOException e1) {
 						e1.printStackTrace();
@@ -175,7 +176,7 @@ public class ChatClient extends JFrame {
 				lock.unlock();
 			}
 		});
-		
+
 		nameChangeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				System.out.println("[ChatClient.nameChangeButton] clicked");
@@ -210,7 +211,7 @@ public class ChatClient extends JFrame {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		setSize(600, 600);
 		setVisible(true);
 	}
@@ -246,12 +247,12 @@ public class ChatClient extends JFrame {
 			lock.lock();
 			JPanel totalChatBox = new JPanel();
 			nameBox = new JLabel(message.name + ": ");
-			ImageIcon imgicon = new ImageIcon(message.image);
+			ImageIcon imgicon = new ImageIcon(message.image.getBufferedImage());
 			JLabel imgLabel = new JLabel(imgicon);
 			totalChatBox.add(nameBox);
 			totalChatBox.add(imgLabel);
 			add(totalChatBox, 0, layoutIndex, 5, chatPanel);
-			layoutIndex++;
+			layoutIndex += 5;
 			lock.unlock();
 		}
 	}
